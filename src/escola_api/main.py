@@ -2,6 +2,9 @@ from datetime import datetime
 
 from fastapi import FastAPI
 
+from fastapi.responses import JSONResponse
+
+
 app = FastAPI()
 
 @app.get("/")
@@ -37,4 +40,47 @@ def processar_dados_cliente(nome: str, idade: int, sobrenome: str):
         "idade": decada,
     }
 
+@app.get("/calcular-total-produto")
+def calcular_total_produto(nome: str, quantidade: int, preco: float):
+    total = quantidade * preco, 2
+    return {"nome": nome,
+            "quantidade": quantidade,
+            "preco": preco,
+            "total": total,
+    }
 
+@app.get("/calcular-combustivel")
+def calcular_combustivel(gasolina: float, alcool: float):
+    # Validação simples para números positivos
+    if gasolina <= 0 or alcool <= 0:
+        return JSONResponse(status_code=400, content={"erro": "Preços devem ser positivos"})
+
+    # Comparação usando if / else if / else
+    if alcool <= gasolina * 0.7:
+        return {"abastecer": "álcool"}
+    else:
+        return {"abastecer": "gasolina"}
+
+@app.get("/calcular-media")
+def calcular_media(nota1: float, nota2: float, nota3: float):
+    # Calcula a média das 3 notas
+    media = (nota1 + nota2 + nota3) / 3
+    # Arredonda para duas casas decimais
+    media = round(media, 2)
+
+    # Decide o status do aluno
+    if media >= 70:
+        status = "Aprovado"
+    elif media >= 50:
+        status = "Em recuperação"
+    else:
+        status = "Reprovado"
+
+    # Retorna um dicionário (que vira JSON)
+    return {
+        "nota1": nota1,
+        "nota2": nota2,
+        "nota3": nota3,
+        "media": media,
+        "status": status
+    }

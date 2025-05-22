@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Média</title>
+</head>
+<body>
+
+  <h1>Calculadora de Média do Aluno</h1>
+
+  <!-- O formulário envia os dados direto para o backend -->
+  <form action="http://localhost:8000/calcular-media" method="get">
+    <label for="nota1">Nota 1:</label><br />
+    <input type="number" id="nota1" name="nota1" step="0.01" required><br /><br />
+
+    <label for="nota2">Nota 2:</label><br />
+    <input type="number" id="nota2" name="nota2" step="0.01" required><br /><br />
+
+    <label for="nota3">Nota 3:</label><br />
+    <input type="number" id="nota3" name="nota3" step="0.01" required><br /><br />
+
+    <button type="submit">Calcular</button>
+  </form>
+
+</body>
+</html>
