@@ -144,7 +144,7 @@ def apagar_curso(id: int):
             return
     raise HTTPException(status_code=404, detail=f"Curso não encontrado com id: {id}")
 
-@app.put('/api/cursos/{id}', status_code=200)
+@app.put("/api/cursos/{id}", status_code=200)
 def editar_curso(id: int, form: CursoEditar):
     for curso in cursos:
         if curso.id == id:
@@ -153,9 +153,130 @@ def editar_curso(id: int, form: CursoEditar):
             return curso
     raise HTTPException(status_code=404, detail=f"Curso não encontrado com id: {id}")
 
-## Fazer o execício de Aluno com os seguintes campos:
-##       - nome, sobrenome, cpf e data de nascimento
-## Fazer o CRUD completo
-## - GET /api
+# 🧑‍🎓 Exercício: Implementação de um CRUD para Alunos com FastAPI
+# Implemente uma API RESTful para gerenciar um cadastro de alunos utilizando o FastAPI. A API deve conter todas as operações básicas de CRUD (Create, Read, Update e Delete), com os seguintes requisitos:
+
+# 📄 Estrutura da Entidade
+# A entidade Aluno deve conter os seguintes campos:
+
+# id: int (gerado automaticamente)
+# nome: str
+# sobrenome: str
+# cpf: str
+# data_nascimento: str ou datetime (você pode escolher o tipo, mas seja consistente)
+# Você deve utilizar @dataclass para definir as seguintes classes:
+
+# Aluno: representa o aluno completo, incluindo o campo id.
+# AlunoCadastro: usada para receber dados ao cadastrar um novo aluno (sem o campo id).
+# AlunoEditar: usada para editar os dados de um aluno existente (sem o campo id).
+# 📌 Requisitos da API
+# ✅ GET /api/alunos
+# Deve retornar uma lista com todos os alunos cadastrados.
+# Status de resposta: 200 OK
+# ✅ GET /api/alunos/{id}
+# Deve retornar o aluno correspondente ao id informado.
+
+# Caso o aluno não seja encontrado, retorne um erro.
+
+# Status de resposta:
+
+# 200 OK se encontrado
+# 404 Not Found se não encontrado
+# ✅ POST /api/alunos
+# Deve cadastrar um novo aluno com os dados enviados no corpo da requisição.
+# O campo id deve ser gerado automaticamente.
+# Status de resposta: 200 OK
+# ✅ PUT /api/alunos/{id}
+# Deve atualizar os dados do aluno com o id correspondente, usando os dados enviados no corpo da requisição.
+
+# Utilize um loop (for) para localizar o aluno.
+
+# Caso o aluno não seja encontrado, retorne um erro.
+
+# Status de resposta:
+
+# 200 OK se atualizado com sucesso
+# 404 Not Found se o aluno não for encontrado
+# ✅ DELETE /api/alunos/{id}
+# Deve remover o aluno correspondente ao id informado.
+
+# Caso o aluno não seja encontrado, retorne um erro.
+
+# Status de resposta:
+
+# 204 No Content se excluído com sucesso
+# 404 Not Found se não encontrado
+
+@dataclass
+class Aluno:
+    id: int = field()
+    nome: str = field()
+    sobrenome: str = field()
+    cpf: str = field()
+    data_nascimento: str = field()
+
+@dataclass
+class AlunoCadastro:
+    nome: str = field()
+    sobrenome: str = field()
+    cpf: str = field()
+    data_nascimento: str = field()
+
+@dataclass
+class AlunoEditar:
+    nome: str = field()
+    sobrenome: str = field()
+    cpf: str = field()
+    data_nascimento: str = field()
+
+alunos = [
+    Aluno(id=1, nome="João", sobrenome="Silva", cpf="12345678900", data_nascimento="2000-01-01"),
+    Aluno(id=2, nome="Maria", sobrenome="Oliveira", cpf="98765432100", data_nascimento="1999-12-31")
+]
+
+@app.get("/api/alunos")
+def listar_todos_alunos():
+    return alunos
+
+@app.get("/api/alunos/{id}")
+def obter_aluno_por_id(id: int):
+    for aluno in alunos:
+        if aluno.id == id:
+            return aluno
+    raise HTTPException(status_code=404, detail=f"Aluno não encontrado com id: {id}")
+
+@app.post("/api/alunos")
+def cadastrar_aluno(form: AlunoCadastro):
+    ultimo_id = max([aluno.id for aluno in alunos], default=0)
+    aluno = Aluno(
+        id=ultimo_id + 1,
+        nome=form.nome,
+        sobrenome=form.sobrenome,
+        cpf=form.cpf,
+        data_nascimento=form.data_nascimento
+    )
+    alunos.append(aluno)
+    return aluno
+
+@app.put("/api/alunos/{id}")
+def editar_aluno(id: int, form: AlunoEditar):
+    for aluno in alunos:
+        if aluno.id == id:
+            aluno.nome = form.nome
+            aluno.sobrenome = form.sobrenome
+            aluno.cpf = form.cpf
+            aluno.data_nascimento = form.data_nascimento
+            return aluno
+    raise HTTPException(status_code=404, detail=f"Aluno não encontrado com id: {id}")
+
+@app.delete("/api/alunos/{id}", status_code=204)
+def apagar_aluno(id: int):
+    for aluno in alunos:
+        if aluno.id == id:
+            alunos.remove(aluno)
+            return
+    raise HTTPException(status_code=404, detail=f"Aluno não encontrado com id: {id}")
+
+
 if __name__ == "__main__":
     uvicorn.run("main:app")
