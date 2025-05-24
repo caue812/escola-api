@@ -1,8 +1,12 @@
+from dataclasses import field, dataclass
 from datetime import datetime
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.openapi.utils import status_code_ranges
 
 from fastapi.responses import JSONResponse
+
+import uvicorn
 
 
 app = FastAPI()
@@ -84,3 +88,74 @@ def calcular_media(nota1: float, nota2: float, nota3: float):
         "media": media,
         "status": status
     }
+
+# from dataclasses import dataclass, field
+@dataclass
+class Curso:
+    id: int = field()
+    nome: str = field()
+    sigla: str = field()
+
+@dataclass
+class CursoCadastro:
+    nome: str = field()
+    sigla: str = field()
+
+@dataclass
+class CursoEditar:
+    nome: str = field()
+    sigla: str = field()
+
+cursos = [
+    # instanciando um objeto de classe Curso
+    Curso(id = 1, nome = "Python Web", sigla ="PY1"),
+    Curso(id = 2, nome = "Git e GitHub", sigla ="GT")
+]
+
+# localhost:8000/docs
+@app.get("/api/cursos")
+def listar_todos_cursos():
+    return  cursos
+
+@app.get("/api/cursos/{id}")
+def obter_por_id_curso(id: int):
+    for curso in cursos:
+        if curso.id == id:
+            return curso
+    # Lançado uma exceção com o status code de 404(não encontrado)
+    raise HTTPException(status_code=404, detail=f"Curso não encontrado com id: {id}")
+
+@app.post("/api/cursos")
+def cadastrar_curso(form: CursoCadastro):
+    ultimo_id = max([curso.id for curso in cursos], default=0)
+
+    # instanciar um objeto da classe Curso
+    curso = Curso(id = ultimo_id + 1, nome=form.nome, sigla=form.sigla)
+
+    cursos.append(curso)
+
+    return curso
+
+@app.delete("/api/cursos/{id}", status_code=204)
+def apagar_curso(id: int):
+    for curso in cursos:
+        if curso.id == id:
+            cursos.remove(curso)
+            return
+    raise HTTPException(status_code=404, detail=f"Curso não encontrado com id: {id}")
+
+@app.put('/api/cursos/{id}', status_code=200)
+def editar_curso(id: int, form: CursoEditar):
+    for curso in cursos:
+        if curso.id == id:
+            curso.nome = form.nome
+            curso.sigla = form.sigla
+            return curso
+    raise HTTPException(status_code=404, detail=f"Curso não encontrado com id: {id}")
+
+## Fazer o execício de Aluno com os seguintes campos:
+##       - nome, sobrenome, cpf e data de nascimento
+## Fazer o CRUD completo
+## - GET /api
+if __name__ == "__main__":
+    uvicorn.run("main:app")
