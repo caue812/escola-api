@@ -3,17 +3,20 @@ name = "escola-api"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "caue812",email = "cauepravato5138@gmail.com"}
+    {name = "Francisco Lucas Janesch Lange Sens",email = "franciscosensaulas@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4.0"
 dependencies = [
-    "fastapi[standard] (>=0.115.12,<0.116.0)"
+    "fastapi[standard] (>=0.115.12,<0.116.0)",
+    "dataclasses-json (>=0.6.7,<0.7.0)",
+    "pydantic (>=2.11.5,<3.0.0)"
 ]
 
 [tool.poetry]
 packages = [{include = "escola_api", from = "src"}]
-
+# poetry lock
+# poetry add dataclasses-json
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
