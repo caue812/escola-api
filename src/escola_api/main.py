@@ -238,9 +238,6 @@ def editar_formacao(id: int, form: FormacaoEditar):
             return formacao_item
     raise HTTPException(status_code=404, detail=f"Formação com id {id} não encontrada")
 
-
-
-
 class Professor(BaseModel):
     id: int
     nome: str
@@ -332,6 +329,8 @@ def editar_professor(id: int, form: ProfessorEditar):
             professor_item.signo = calcular_signo(form.data_nascimento)
             return professor_item
     raise HTTPException(status_code=404, detail=f"Professor com id {id} não encontrado")
+
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True)
