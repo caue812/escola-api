@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from escola_api.database.banco_dados import Base
+from src.escola_api.database.banco_dados import Base
 
 
 class Curso(Base):
