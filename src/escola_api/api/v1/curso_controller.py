@@ -1,7 +1,9 @@
 from fastapi import  HTTPException
+from fastapi.params import Depends
 from requests import Session
 
 from escola_api.database.banco_dados import SessionLocal
+from escola_api.database.modelos import CursoEntidade
 from src.escola_api.schemas.curso_schemas import Curso, CursoCadastro, CursoEditar
 from src.escola_api.app import router
 
@@ -23,7 +25,8 @@ def get_db():
 
 
 @router.get("/api/cursos")
-def listar_todos_cursos(db: Session = D):
+def listar_todos_cursos(db: Session = Depends(get_db)):
+    cursos = db.query(CursoEntidade).all()
     return cursos
 
 
