@@ -2,7 +2,7 @@
 # powershell -ExecutionPolicy Bypass -File .\setup.ps1
 
 # Caminho do ambiente virtual
-$envDir = "env"
+$envDir = "env".env.example
 
 # Verifica se Python está instalado
 if (!(Get-Command python -ErrorAction SilentlyContinue)) {
