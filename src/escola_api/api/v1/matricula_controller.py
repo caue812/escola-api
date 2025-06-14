@@ -42,7 +42,7 @@ def cadastrar_matricula(form: MatriculaCadastro, db: Session = Depends(get_db)):
     return matricula
 
 
-@router.delete("/api/matriculas{id}", status_code=204, tags=["matriculas"])
+@router.delete("/api/matriculas/{id}", status_code=204, tags=["matriculas"])
 def apagar_matricula(id: int, db: Session = Depends(get_db)):
     matricula = db.query(MatriculaEntidade).filter(MatriculaEntidade.id == id).first()
     if matricula:

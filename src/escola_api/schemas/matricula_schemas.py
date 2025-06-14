@@ -1,18 +1,18 @@
-from dataclasses import field
 from datetime import date
 
 from pydantic import BaseModel, Field
 
 
-
 class MatriculaBase(BaseModel):
-    aluno_id: int = Field()
-    curso_id: int = Field()
+    aluno_id: int = Field(alias="alunoId")
+    curso_id: int = Field(alias="cursoId")
+
 
 class MatriculaAluno(BaseModel):
-    nome:str = Field()
+    nome: str = Field()
     sobrenome: str = Field()
     id: int = Field()
+
 
 class Matricula(MatriculaBase):
     data_matricula: date = Field(alias="dataMatricula")
@@ -22,11 +22,10 @@ class Matricula(MatriculaBase):
     class Config:
         populate_by_name = True
 
-class MatriculaCadastro(BaseModel):
-        pass
+
+class MatriculaCadastro(MatriculaBase):
+    pass
+
 
 class MatriculaEditar(BaseModel):
     curso_id: int = Field()
-
-
-
